@@ -71,6 +71,7 @@ class MovieViewSet(viewsets.ModelViewSet):
 
 
 class MovieSessionViewSet(viewsets.ModelViewSet):
+    queryset = MovieSession.objects.none()  # satisfies router; get_queryset() does the real work
     serializer_class = MovieSessionSerializer
     pagination_class = None
 
@@ -103,10 +104,8 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return MovieSessionListSerializer
-
         if self.action == "retrieve":
             return MovieSessionDetailSerializer
-
         return MovieSessionSerializer
 
 
