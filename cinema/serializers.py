@@ -71,7 +71,6 @@ class MovieSessionListSerializer(MovieSessionSerializer):
     )
     tickets_available = serializers.IntegerField(read_only=True)
 
-
     class Meta:
         model = MovieSession
         fields = (
@@ -109,9 +108,13 @@ class MovieSessionDetailSerializer(MovieSessionSerializer):
             "taken_places",
         )
 
+
 class MovieSessionShortSerializer(serializers.ModelSerializer):
     movie_title = serializers.CharField(source="movie.title", read_only=True)
-    cinema_hall_name = serializers.CharField(source="cinema_hall.name", read_only=True)
+    cinema_hall_name = serializers.CharField(
+        source="cinema_hall.name",
+        read_only=True
+    )
     cinema_hall_capacity = serializers.IntegerField(
         source="cinema_hall.capacity", read_only=True
     )
@@ -153,7 +156,8 @@ class TicketCreateSerializer(serializers.ModelSerializer):
 
         if not (1 <= seat <= cinema_hall.seats_in_row):
             raise serializers.ValidationError(
-                {"seat": f"Seat must be between 1 and {cinema_hall.seats_in_row}"}
+                {"seat": f"Seat must be between 1 and"
+                         f" {cinema_hall.seats_in_row}"}
             )
 
         if Ticket.objects.filter(
