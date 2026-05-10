@@ -71,24 +71,23 @@ class MovieViewSet(viewsets.ModelViewSet):
 
 
 class MovieSessionViewSet(viewsets.ModelViewSet):
-    queryset = MovieSession.objects.select_related(
-        "movie",
-        "cinema_hall",
-    ).prefetch_related(
-        "tickets",
-        "movie__genres",
-        "movie__actors",
-    ).annotate(
-        tickets_available=(
-            F("cinema_hall__rows") * F("cinema_hall__seats_in_row")
-            - Count("tickets")
-        )
-    )
     serializer_class = MovieSessionSerializer
     pagination_class = None
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = MovieSession.objects.select_related(
+            "movie",
+            "cinema_hall",
+        ).prefetch_related(
+            "tickets",
+            "movie__genres",
+            "movie__actors",
+        ).annotate(
+            tickets_available=(
+                F("cinema_hall__rows") * F("cinema_hall__seats_in_row")
+                - Count("tickets")
+            )
+        )
 
         date = self.request.query_params.get("date")
         movie = self.request.query_params.get("movie")
